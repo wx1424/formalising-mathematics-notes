@@ -222,62 +222,155 @@ learned so far (`exact`, `intro`, `apply`, `specialize`, `have`, `suffices`,
 /-- If we know `P`, and we also know `P → Q`, we can deduce `Q`.
 This is called "modus ponens" by logicians. -/
 example : P → (P → Q) → Q := by
-  sorry
+  intro hP hPQ
+  specialize hPQ hP
+  exact hPQ
 
 /-- `→` is transitive. -/
 example : (P → Q) → (Q → R) → P → R := by
-  sorry
+  intro hPQ hQR hP
+  specialize hPQ hP
+  specialize hQR hPQ
+  exact hQR
 
 /-- If `h : P → Q → R` with goal `⊢ R`, then `apply h` will give two goals! -/
 example : (P → Q → R) → (P → Q) → P → R := by
-  sorry
+  intro hPQR hPQ hP
+  apply hPQR
+  · exact hP
+  apply hPQ
+  · exact hP
 
 /-- `∨` is symmetric. -/
 example : P ∨ Q → Q ∨ P := by
-  sorry
+  intro hPQ
+  rcases hPQ with hP | hQ
+  · right
+    exact hP
+  · left
+    exact hQ
 
 /-- `∧` is symmetric. -/
 example : P ∧ Q → Q ∧ P := by
-  sorry
+  intro hPQ
+  rcases hPQ with ⟨hP, hQ⟩
+  constructor
+  · exact hQ
+  · exact hP
 
 /-- `∧` is transitive. -/
 example : P ∧ Q → Q ∧ R → P ∧ R := by
-  sorry
+  intro hPQ hQR
+  rcases hPQ with ⟨hP, hQ⟩
+  rcases hQR with ⟨hQ, hR⟩
+  constructor
+  · exact hP
+  · exact hR
 
 example : P ∨ Q → (P → R) → (Q → R) → R := by
-  sorry
+  intro hPQ hPR hQR
+  rcases hPQ with hP | hQ
+  · apply hPR
+    exact hP
+  · apply hQR
+    exact hQ
 
 example : (P → Q) → P ∨ R → Q ∨ R := by
-  sorry
+  intro hPQ hPR
+  rcases hPR with hP | hR
+  · left
+    apply hPQ
+    exact hP
+  · right
+    exact hR
 
 example : P → True := by
-  sorry
+  intro hP
+  exact trivial
 
 example : False → P := by
-  sorry
+  intro hF
+  by_contra hP
+  exact hF
 
 example : ¬ True → P := by
-  sorry
+  intro hF
+  by_contra hP
+  specialize hF trivial
+  exact hF
 
 example : P → ¬ False := by
-  sorry
+  intro hP hF
+  exact hF
 
 example : ¬ P → P → Q := by
-  sorry
+  intro hNP hP
+  specialize hNP hP
+  by_contra hQ
+  exact hNP
 
 /-- If we know `P → Q`, and we also know `¬ Q`, we can deduce `¬ P`.
 This is called "modus tollens" by logicians. -/
 example : (P → Q) → ¬ Q → ¬ P := by
-  sorry
+  intro hPQ hNQ hP
+  specialize hPQ hP
+  specialize hNQ hPQ
+  exact hNQ
 
 example : (¬ Q → ¬ P) → P → Q := by
-  sorry
+  intro hQP hP
+  by_cases hQ : Q
+  · exact hQ
+  · by_contra hNQ
+    specialize hQP hQ
+    specialize hQP hP
+    exact hQP
 
 example : (P → Q) → ((P → Q) → P) → Q := by
-  sorry
+  intro hPQ hPQ2
+  specialize hPQ2 hPQ
+  specialize hPQ hPQ2
+  exact hPQ
 
 example : ((P → Q) → R) → ((Q → R) → P) → ((R → P) → Q) → P := by
-  sorry
+  intro hPQR hQRP hRPQ
+  by_cases hP : P
+  · exact hP
+  · by_contra hP
+    by_cases hR : R
+    · have hQR : Q → R := by
+        intro hQ
+        exact hR
+      specialize hQRP hQR
+      specialize hP hQRP
+      exact hP
+    · have hPQ : P → Q := by
+        intro hNP
+        specialize hP hNP
+        by_contra hQ
+        exact hP
+      specialize hPQR hPQ
+      specialize hR hPQR
+      exact hR
+/-this seems like a very inefficient solution-/
 
 example : ((Q → P) → P) → (Q → R) → (R → P) → P := by
-  sorry
+  intro hQPP hQR hRP
+  by_cases hQ : Q
+  · specialize hQR hQ
+    specialize hRP hQR
+    exact hRP
+  · by_contra hP
+    by_cases hR : R
+    · specialize hRP hR
+      specialize hP hRP
+      exact hP
+    · have hQP : Q → P := by
+        intro hQQ
+        by_contra hPP
+        specialize hQ hQQ
+        exact hQ
+      specialize hQPP hQP
+      specialize hP hQPP
+      exact hP
+/-this is defineitly very inefficient-/
