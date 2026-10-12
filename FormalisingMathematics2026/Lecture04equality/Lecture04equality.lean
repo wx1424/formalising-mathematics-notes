@@ -206,36 +206,93 @@ theorem zero_add (a : MyNat) : zero + a = a := by
     rw [add_succ, h]
 
 theorem succ_add (a b : MyNat) : succ a + b = succ (a + b) := by
-  sorry
+  induction b with
+  | zero =>
+    rw [add_zero, add_zero]
+  | succ n h =>
+    rw [add_succ, add_succ, h]
 
 theorem add_comm (a b : MyNat) : a + b = b + a := by
-  sorry
+  induction b with
+  | zero =>
+    rw [add_zero]
+    induction a with
+    | zero =>
+      rw [add_zero]
+    | succ n h =>
+      rw [add_succ, ← h]
+  | succ n h =>
+    rw [add_succ, h, ← succ_add]
 
 theorem add_assoc (a b c : MyNat) : a + b + c = a + (b + c) := by
-  sorry
+  induction c with
+  | zero =>
+    rw [add_zero, add_zero]
+  | succ n h =>
+    rw [add_succ, h, ← add_succ, ← add_succ]
 
 theorem zero_mul (a : MyNat) : zero * a = zero := by
-  sorry
+  induction a with
+  | zero =>
+    rw [mul_zero]
+  | succ n h =>
+    rw [mul_succ, add_zero, h]
 
 theorem succ_mul (a b : MyNat) : succ a * b = a * b + b := by
-  sorry
+  induction b with
+  | zero =>
+    rw [mul_zero, mul_zero, add_zero]
+  | succ n h =>
+    rw [mul_succ, mul_succ, h, add_assoc, add_assoc]
+    rw[add_succ, add_succ a n, add_comm a n]
 
 theorem mul_comm (a b : MyNat) : a * b = b * a := by
-  sorry
+  induction b with
+  | zero =>
+    rw [mul_zero]
+    induction a with
+    | zero =>
+      rw [mul_zero]
+    | succ n h =>
+      rw [mul_succ, add_zero]
+      exact h
+  | succ n h =>
+    rw [mul_succ, h, succ_mul]
 
 theorem mul_add (a b c : MyNat) : a * (b + c) = a * b + a * c := by
-  sorry
+  induction c with
+  | zero =>
+    rw [add_zero, mul_zero, add_zero]
+  | succ n h =>
+    rw [add_succ, mul_succ, h, mul_succ, add_assoc]
 
 theorem add_mul (a b c : MyNat) : (a + b) * c = a * c + b * c := by
-  sorry
+  induction c with
+  | zero =>
+    rw [mul_zero, mul_zero, mul_zero, add_zero]
+  | succ n h =>
+    rw [mul_succ, h, mul_succ, mul_succ, ← add_assoc, ← add_assoc]
+    rw [add_assoc (a * n) (a) (b * n), add_comm a (b * n), ← add_assoc]
 
 theorem mul_assoc (a b c : MyNat) : a * b * c = a * (b * c) := by
-  sorry
+  induction c with
+  | zero =>
+    rw [mul_zero, mul_zero, mul_zero]
+  | succ n h =>
+    rw [mul_succ, h, mul_succ, mul_add]
 
 theorem mul_one (a : MyNat) : a * succ zero = a := by
-  sorry
+  induction a with
+  | zero =>
+    rw [mul_comm, mul_zero]
+  | succ n h =>
+    rw [succ_mul, h, add_succ, add_zero]
 
 theorem one_mul (a : MyNat) : succ zero * a = a := by
-  sorry
+  induction a with
+  | zero =>
+    rw [mul_zero]
+  | succ n h =>
+    rw [mul_succ, h, add_succ, add_zero]
 
 end MyNat

@@ -235,13 +235,29 @@ learned so far (`exact`, `intro`, `apply`, `specialize`, `have`, `suffices`,
 -/
 
 example (α : Type*) (P : α → Prop) (h : ∀ a : α, ¬ P a) : ¬ ∃ a : α, P a := by
-  sorry
+  by_contra ch
+  rcases ch with ⟨a, ha⟩
+  specialize h a
+  specialize h ha
+  exact h
 
 example (α : Type*) (P : α → Prop) (h : ¬ ∀ a : α, P a) : ∃ a : α, ¬ P a := by
-  sorry
+  by_contra ha
+  apply h
+  intro a
+  by_contra hza
+  apply ha
+  use a
 
 example (α : Type*) (P : α → Prop) (h : ∃ a : α, ¬ P a) : ¬ ∀ a : α, P a := by
-  sorry
+  by_contra hp
+  rcases h with ⟨a, ha⟩
+  specialize hp a
+  specialize ha hp
+  exact ha
 
 example (α : Type*) (P : α → Prop) (h : ¬ ∃ a : α, P a) : ∀ a : α, ¬ P a := by
-  sorry
+  intro a
+  by_contra ha
+  apply h
+  use a
