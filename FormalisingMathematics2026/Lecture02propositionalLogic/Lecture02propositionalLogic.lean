@@ -334,6 +334,18 @@ example : (P → Q) → ((P → Q) → P) → Q := by
 
 example : ((P → Q) → R) → ((Q → R) → P) → ((R → P) → Q) → P := by
   intro hPQR hQRP hRPQ
+  apply hQRP
+  intro hQ
+  apply hPQR
+  intro hP
+  apply hRPQ
+  intro hR
+  exact hP
+  /-hooray-/
+
+/-this solution works too but it sucks
+
+  intro hPQR hQRP hRPQ
   by_cases hP : P
   · exact hP
   · by_contra hP
@@ -351,10 +363,17 @@ example : ((P → Q) → R) → ((Q → R) → P) → ((R → P) → Q) → P :=
         exact hP
       specialize hPQR hPQ
       specialize hR hPQR
-      exact hR
-/-this seems like a very inefficient solution-/
+      exact hR-/
 
 example : ((Q → P) → P) → (Q → R) → (R → P) → P := by
+  intro hQPP hQR hRP
+  apply hQPP
+  intro hQ
+  specialize hQR hQ
+  specialize hRP hQR
+  exact hRP
+
+/-
   intro hQPP hQR hRP
   by_cases hQ : Q
   · specialize hQR hQ
@@ -373,4 +392,5 @@ example : ((Q → P) → P) → (Q → R) → (R → P) → P := by
       specialize hQPP hQP
       specialize hP hQPP
       exact hP
+-/
 /-this is defineitly very inefficient-/
