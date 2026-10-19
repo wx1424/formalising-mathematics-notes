@@ -142,22 +142,26 @@ Use the "refine dictionary" to produce term-mode proofs of the following proposi
 variable (P Q R : Prop)
 
 example : P → (P → Q) → Q :=
-  sorry
+  fun hP hPQ ↦ (hPQ hP)
 
 example : (P → Q) → (Q → R) → P → R :=
-  sorry
+  fun hPQ hQR hP ↦ (hQR (hPQ hP))
 
 example : (P → Q → R) → (P → Q) → P → R :=
-  sorry
+  fun hPQR hPQ hP ↦ ((hPQR hP) (hPQ hP))
 
 example : (P → Q) → ((P → Q) → P) → Q :=
-  sorry
+  fun hPQ hPQP ↦ (hPQ (hPQP hPQ))
 
 example : ((P → Q) → R) → ((Q → R) → P) → ((R → P) → Q) → P :=
-  sorry
+  fun hPQR hQRP hRPQ ↦ hQRP fun hQ ↦ hPQR fun hP ↦ hQ
 
 example : ((Q → P) → P) → (Q → R) → (R → P) → P :=
-  sorry
+  fun hQPP hQR hRP ↦ hQPP fun hQP ↦ (hRP (hQR hQP))
 
 example (α : Type*) (P : α → Prop) (h : ¬ ∃ a : α, P a) : ∀ a : α, ¬ P a := by
-  sorry
+  refine fun a ↦ ?_
+  refine fun hPa ↦ ?_
+  refine h ?_
+  refine ⟨a, ?_⟩
+  refine hPa
