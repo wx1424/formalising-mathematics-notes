@@ -185,67 +185,231 @@ section
 variable (s t u v : Set α)
 
 example : s ⊆ s := by
-  sorry
+  intro a h
+  exact h
 
 example : s ⊆ t → t ⊆ u → s ⊆ u := by
-  sorry
+  intro h h1 a h2
+  apply h1
+  apply h
+  exact h2
 
 example : s ⊆ s ∪ t := by
-  sorry
+  intro a h
+  left
+  exact h
 
 example : s ∩ t ⊆ s := by
-  sorry
+  intro a h
+  rcases h with ⟨h1, h2⟩
+  exact h1
 
 example : s ⊆ t → s ⊆ u → s ⊆ t ∩ u := by
-  sorry
+  intro h h1 a h2
+  constructor
+  · apply h
+    exact h2
+  · apply h1
+    exact h2
 
 example : t ⊆ s → u ⊆ s → t ∪ u ⊆ s := by
-  sorry
+  intro h h1 a h2
+  rcases h2 with ht | hu
+  · apply h
+    exact ht
+  · apply h1
+    exact hu
 
 example : s ⊆ t → u ⊆ v → s ∪ u ⊆ t ∪ v := by
-  sorry
+  intro h h1 a h2
+  rcases h2 with hs | hu
+  · left
+    apply h
+    exact hs
+  · right
+    apply h1
+    exact hu
 
 example : s ⊆ t → u ⊆ v → s ∩ u ⊆ t ∩ v := by
-  sorry
+  intro h h1 a h2
+  rcases h2 with ⟨hs, hu⟩
+  constructor
+  · apply h
+    exact hs
+  · apply h1
+    exact hu
 
 example : ∅ ⊆ s := by
-  sorry
+  intro h a
+  by_contra h1
+  exact a
 
 example : s ⊆ Set.univ := by
-  sorry
+  intro a h
+  exact trivial
 
 example : s ⊆ t → t ⊆ s → s = t := by
-  sorry
+  intro h h1
+  ext a
+  constructor
+  · intro h2
+    apply h
+    exact h2
+  · intro h2
+    apply h1
+    exact h2
 
 example : s ∪ s = s := by
-  sorry
+  ext a
+  constructor
+  · intro h
+    rcases h with h1 | h2
+    · exact h1
+    · exact h2
+  · intro h
+    left
+    exact h
 
 example : s ∩ s = s := by
-  sorry
+  ext a
+  constructor
+  · intro h
+    rcases h with ⟨h1, h2⟩
+    exact h1
+  · intro h
+    constructor
+    · exact h
+    · exact h
 
 example : s ∪ ∅ = s := by
-  sorry
+  ext a
+  constructor
+  · intro h
+    rcases h with h1 | h2
+    · exact h1
+    · by_contra h3
+      exact h2
+  · intro h
+    left
+    exact h
 
 example : s ∪ Set.univ = Set.univ := by
-  sorry
+  ext a
+  constructor
+  · intro h
+    exact trivial
+  · intro h
+    right
+    exact trivial
 
 example : s ∩ ∅ = ∅ := by
-  sorry
+  ext a
+  constructor
+  · intro h
+    rcases h with ⟨h1, h2⟩
+    exact h2
+  · intro h
+    constructor
+    · by_contra h1
+      exact h
+    · exact h
 
 example : s ∩ Set.univ = s := by
-  sorry
+  ext a
+  constructor
+  · intro h
+    rcases h with ⟨h1, h2⟩
+    exact h1
+  · intro h
+    constructor
+    · exact h
+    · exact trivial
 
 example : s ∪ t = t ∪ s := by
-  sorry
+  ext a
+  constructor
+  · intro h
+    rcases h with h1 | h2
+    · right
+      exact h1
+    · left
+      exact h2
+  · intro h
+    rcases h with h1 | h2
+    · right
+      exact h1
+    · left
+      exact h2
 
 example : s ∩ t = t ∩ s := by
-  sorry
+  ext a
+  constructor
+  · intro h
+    rcases h with ⟨h1, h2⟩
+    constructor
+    · exact h2
+    · exact h1
+  · intro h
+    rcases h with ⟨h1, h2⟩
+    constructor
+    · exact h2
+    · exact h1
 
 example : s ∪ t ∩ u = (s ∪ t) ∩ (s ∪ u) := by
-  sorry
+  ext a
+  constructor
+  · intro h
+    rcases h with ht | h1
+    · constructor
+      · left
+        exact ht
+      · left
+        exact ht
+    · rcases h1 with ⟨ht, hu⟩
+      constructor
+      · right
+        exact ht
+      · right
+        exact hu
+  · intro h
+    rcases h with ⟨h1, h2⟩
+    rcases h1 with hs | ht
+    · left
+      exact hs
+    · rcases h2 with hs | hu
+      · left
+        exact hs
+      · right
+        constructor
+        · exact ht
+        · exact hu
 
 example : s ∩ (t ∪ u) = s ∩ t ∪ s ∩ u := by
-  sorry
+  ext a
+  constructor
+  · intro h
+    rcases h with ⟨hs, h1⟩
+    rcases h1 with ht | hu
+    · left
+      constructor
+      · exact hs
+      · exact ht
+    · right
+      constructor
+      · exact hs
+      · exact hu
+  · intro h
+    rcases h with h1 | h2
+    · rcases h1 with ⟨hs, ht⟩
+      constructor
+      · exact hs
+      · left
+        exact ht
+    · rcases h2 with ⟨hs, hu⟩
+      constructor
+      · exact hs
+      · right
+        exact hu
 
 example : (s ∪ t)ᶜ = sᶜ ∩ tᶜ := by
   sorry
