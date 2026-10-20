@@ -412,10 +412,34 @@ example : s ∩ (t ∪ u) = s ∩ t ∪ s ∩ u := by
         exact hu
 
 example : (s ∪ t)ᶜ = sᶜ ∩ tᶜ := by
-  sorry
+  ext a
+  constructor
+  · intro h
+    constructor
+    · intro h1
+      apply h
+      left
+      exact h1
+    · intro h1
+      apply h
+      right
+      exact h1
+  · intro h h1
+    rcases h with ⟨hs, ht⟩
+    rcases h1 with hs1 | hs2
+    · apply hs
+      exact hs1
+    · apply ht
+      exact hs2
 
 example : (s ∩ t)ᶜ = sᶜ ∪ tᶜ := by
-  sorry
+  ext a
+  constructor
+  · intro h
+    by_contra h1
+    apply h
+    constructor
+    ·
 
 end
 
