@@ -448,10 +448,26 @@ example : (s ∩ t)ᶜ = sᶜ ∪ tᶜ := by
   ext a
   constructor
   · intro h
-    by_contra h1
-    apply h
-    constructor
-    ·
+    by_cases hs : a ∈ sᶜ
+    · left
+      exact hs
+    · right
+      intro h1
+      apply h
+      constructor
+      · by_contra h2
+        apply hs
+        intro h3
+        apply h2
+        exact h3
+      · exact h1
+  · intro h h1
+    rcases h1 with ⟨hs, ht⟩
+    rcases h with hns | hnt
+    · apply hns
+      exact hs
+    · apply hnt
+      exact ht
 
 end
 
@@ -460,7 +476,8 @@ section
 variable (f : α → β) (g : β → γ) (s : Set α) (t : Set β) (u : Set γ)
 
 example : s ⊆ f ⁻¹' (f '' s) := by
-  sorry
+  intro a h
+
 
 example : f '' (f ⁻¹' t) ⊆ t := by
   sorry
