@@ -25,7 +25,11 @@ and also the following two new tactics:
 variable (P Q R S : Prop)
 
 example : P ↔ P := by
-  sorry
+  constructor
+  · intro hp
+    exact hp
+  · intro hp
+    exact hp
 
 example : (P ↔ Q) → (Q ↔ P) := by
   sorry
@@ -47,7 +51,15 @@ example : P ↔ P ∧ True := by
   sorry
 
 example : False ↔ P ∧ False := by
-  sorry
+  constructor
+  · intro hf
+    constructor
+    · by_contra hp
+      exact hf
+    · exact hf
+  · intro h
+    rcases h with ⟨hp, hf⟩
+    exact hf
 
 example : (P ↔ Q) → (R ↔ S) → (P ∧ R ↔ Q ∧ S) := by
   sorry

@@ -41,12 +41,13 @@ see if you can start beginning to guess what various lemmas should be called.
 -/
 
 example (x : ℝ) : |-x| = |x| := by exact?
+  exact abs_neg x
 -- click where it says "try this" to replace
 -- `exact?` with an "exact" proof
 -- Why do the replacement? Because it's quicker!
 
 example (x y : ℝ) : |x - y| = |y - x| := by exact?
-
+  exact abs_sub_comm x y
 
 -- Hmm. What would a theorem saying "the max is
 -- less-or-equal to something iff something else

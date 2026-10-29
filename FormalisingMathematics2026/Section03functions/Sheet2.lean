@@ -75,10 +75,16 @@ example : Injective (id : X → X) := by
   -- you can start with `rw [injective_def]` if you like,
   -- and later you can `rw [id_eval]`, although remember that `rw` doesn't
   -- work under binders like `∀`, so use `intro` first.
-  sorry
+  rw [injective_def]
+  intro a b h
+  rw [id_eval, id_eval] at h
+  exact h
 
 example : Surjective (id : X → X) := by
-  sorry
+  rw [surjective_def]
+  intro b
+  use b
+  rw [id_eval]
 
 -- Theorem: if f : X → Y and g : Y → Z are injective,
 -- then so is g ∘ f
