@@ -123,10 +123,15 @@ theorem MyGroup.mul_left_cancel (a b c : G) (h : a * b = a * c) : b = c := by
     mul_assoc, mul_assoc, h]
 
 theorem MyGroup.mul_one (a : G) : a * 1 = a := by
+  rw [← inv_mul_cancel a, ← mul_assoc]
   sorry
 
 theorem MyGroup.mul_inv_cancel (a : G) : a * a⁻¹ = 1 := by
+  rw []
   sorry
+
+#print Group
+#check Group
 
 theorem MyGroup.inv_one : (1 : G)⁻¹ = 1 := by
   sorry

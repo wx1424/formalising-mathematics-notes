@@ -148,20 +148,16 @@ example : (P → Q) → (Q → R) → P → R :=
   fun hPQ hQR hP ↦ (hQR (hPQ hP))
 
 example : (P → Q → R) → (P → Q) → P → R :=
-  fun hPQR hPQ hP ↦ ((hPQR hP) (hPQ hP))
+  fun hPQR hPQ hP ↦ (hPQR hP) (hPQ hP)
 
 example : (P → Q) → ((P → Q) → P) → Q :=
-  fun hPQ hPQP ↦ (hPQ (hPQP hPQ))
+  fun hPQ hPQP ↦ hPQ (hPQP hPQ)
 
 example : ((P → Q) → R) → ((Q → R) → P) → ((R → P) → Q) → P :=
-  fun hPQR hQRP hRPQ ↦ hQRP fun hQ ↦ hPQR fun hP ↦ hQ
+  fun hPQR hQRP _ ↦ (hQRP fun hQ ↦ (hPQR (fun _ ↦ hQ)))
 
 example : ((Q → P) → P) → (Q → R) → (R → P) → P :=
-  fun hQPP hQR hRP ↦ hQPP fun hQP ↦ (hRP (hQR hQP))
+  fun hQPP hQR hRP ↦ (hQPP fun hQ ↦ (hRP (hQR hQ)))
 
-example (α : Type*) (P : α → Prop) (h : ¬ ∃ a : α, P a) : ∀ a : α, ¬ P a := by
-  refine fun a ↦ ?_
-  refine fun hPa ↦ ?_
-  refine h ?_
-  refine ⟨a, ?_⟩
-  refine hPa
+example (α : Type*) (P : α → Prop) (h : ¬ ∃ a : α, P a) : ∀ a : α, ¬ P a :=
+  fun a ↦ fun ha ↦ (h ⟨a, ha⟩)

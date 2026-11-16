@@ -29,6 +29,8 @@ mathlib's powerful tactics and to know how to deploy them effectively.
 * `ring` can prove equations in commutative rings.
 -/
 
+#check Not
+
 example (n : ℕ) : ∑ k ∈ Finset.range n, (2 * k + 1) = n ^ 2 := by
   induction n with
   | zero =>
@@ -164,7 +166,24 @@ but you can give a more traditional proof by using `Metric.tendsto_atTop`.
 open Filter
 
 example : Tendsto (fun n : ℕ ↦ 1 / (n + 1 : ℝ)) atTop (nhds 0) := by
-  sorry
+  rw [Metric.tendsto_atTop]
+  intro ε hε
+  obtain ⟨N, hN⟩ := exists_nat_ge (1 / ε)
+  use N
+  intro n hn
+  grw [← hn] at hN
+  rw [Real.dist_eq, sub_zero, abs_of_pos (by positivity),
+   div_lt_iff₀ (by positivity)]
+  rw [div_le_iff₀ (by positivity)] at hN
+  linarith
 
 example : ¬ ∃ a, Tendsto (fun n : ℕ ↦ (-1) ^ n) atTop (nhds a) := by
-  sorry
+  push Not
+  intro a
+  rw [Metric.tendsto_atTop]
+  push Not
+  use 0.5
+  constructor
+  · norm_num
+  · intro N
+    sorry

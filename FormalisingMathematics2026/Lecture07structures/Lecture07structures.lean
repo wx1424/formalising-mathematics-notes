@@ -123,11 +123,24 @@ Here are two more examples of basic API lemmas as examples for you to try.
 
 theorem Injective.of_comp_right (hgf : Injective (g ∘ f)) (hf : Surjective f) :
     Injective g := by
-  sorry
+  intro b b' h
+  obtain ⟨a, ha⟩ := hf b
+  obtain ⟨a', ha'⟩ := hf b'
+  rw [← ha] at h
+  rw [← ha'] at h
+  change (g ∘ f) a = (g ∘ f) a' at h
+  specialize hgf a a' h
+  rw [hgf] at ha
+  rw [ha] at ha'
+  exact ha'
 
 theorem Surjective.of_comp_left (hgf : Surjective (g ∘ f)) (hg : Injective g) :
     Surjective f := by
-  sorry
+  intro b
+  obtain ⟨a, ha⟩ := hgf (g b)
+  use a
+  specialize hg (f a) b ha
+  exact hg
 
 /-
 A predicate `Bijective` on functions `f : α → β` is one possible way

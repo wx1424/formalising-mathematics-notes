@@ -133,10 +133,18 @@ example (f : X → Y) (g : Y → Z) (hf : Surjective f) (hg : Surjective g) : Su
 
 -- This is a question on the IUM (Imperial introduction to proof course) function problem sheet
 example (f : X → Y) (g : Y → Z) : Injective (g ∘ f) → Injective f := by
-  sorry
+  intro hgf a a' h
+  have h1 : (g ∘ f) a = (g ∘ f) a' := by
+    change g (f a) = g (f a')
+    rw [h]
+  specialize hgf h1
+  exact hgf
 
 -- This is another one
 example (f : X → Y) (g : Y → Z) : Surjective (g ∘ f) → Surjective g := by
-  sorry
+  intro h c
+  obtain ⟨a, ha⟩ := h c
+  use (f a)
+  exact ha
 
 end Section3sheet1

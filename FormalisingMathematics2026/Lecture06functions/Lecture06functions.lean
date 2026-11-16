@@ -476,25 +476,75 @@ section
 variable (f : α → β) (g : β → γ) (s : Set α) (t : Set β) (u : Set γ)
 
 example : s ⊆ f ⁻¹' (f '' s) := by
-  intro a h
-
+  intro a ha
+  change f a ∈ f '' s
+  use a
 
 example : f '' (f ⁻¹' t) ⊆ t := by
-  sorry
+  intro b hb
+  rcases hb with ⟨a, ha, rfl⟩
+  exact ha
 
 example : f '' s ⊆ t ↔ s ⊆ f ⁻¹' t := by
-  sorry
+  constructor
+  · intro h a ha
+    change f a ∈ t
+    apply h
+    use a
+  · intro h b hb
+    rcases hb with ⟨a, ha, rfl⟩
+    specialize h ha
+    exact h
 
 example : id ⁻¹' s = s := by
-  sorry
+  ext a
+  constructor
+  · intro h
+    change a ∈ s at h
+    exact h
+  · intro h
+    change a ∈ s
+    exact h
 
 example : id '' s = s := by
-  sorry
+  ext a
+  constructor
+  · intro h
+    rcases h with ⟨b, hb, rfl⟩
+    exact hb
+  · intro h
+    use a
+    constructor
+    · exact h
+    · rfl
 
 example : g ∘ f ⁻¹' u = f ⁻¹' (g ⁻¹' u) := by
-  sorry
+  ext a
+  constructor
+  · intro h
+    change g (f a) ∈ u
+    change (g ∘ f) a ∈ u at h
+    exact h
+  · intro h
+    change (g ∘ f) a ∈ u
+    change g (f a) ∈ u at h
+    exact h
 
 example : g ∘ f '' s = g '' (f '' s) := by
-  sorry
+  ext c
+  constructor
+  · intro h
+    rcases h with ⟨a, ha, rfl⟩
+    refine ⟨f a, ?_⟩
+    constructor
+    · use a
+    · rfl
+  · intro h
+    rcases h with ⟨b, hb, rfl⟩
+    rcases hb with ⟨a, ha, rfl⟩
+    refine ⟨a, ?_⟩
+    constructor
+    · exact ha
+    · rfl
 
 end
